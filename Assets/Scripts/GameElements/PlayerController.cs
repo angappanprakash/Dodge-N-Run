@@ -121,7 +121,11 @@ public class PlayerController : MonoBehaviour
 					SetState(PlayerState.JUMP);
 					mRigidBody.AddForce(Vector2.up * (mJumpForce * mRigidBody.mass * JUMP_FORCE_MULITPLIER));
 				}
-				SetState(PlayerState.RUNNING);
+				else
+				{
+					mIsGameStarted = true;
+					SetState(PlayerState.RUNNING);
+				}
 			}
 		}
 
@@ -145,7 +149,6 @@ public class PlayerController : MonoBehaviour
 			break;
 		case PlayerState.JUMP:
 			mAnimator.SetBool("Run", false);
-			mAnimator.SetBool("Idle", false);
 			mAnimator.SetTrigger("Jump");
 			break;
 		case PlayerState.DEAD:
@@ -172,7 +175,6 @@ public class PlayerController : MonoBehaviour
 			break;
 		case PlayerState.JUMP:
 			mAnimator.SetBool("Run", false);
-			mAnimator.SetBool("Idle", false);
 			break;
 		default:
 			break;
