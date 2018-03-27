@@ -29,6 +29,12 @@ public class Obstacle : MonoBehaviour
 
 	protected virtual void OnCollisionEnter2D(Collision2D collision)
 	{
+		if(collision.gameObject.tag == "Player")
+		{
+			PlayerController player = collision.gameObject.GetComponent<PlayerController>();
+			player.SetState(PlayerState.DEAD);
+			//Destroy(gameObject);
+		}
 	}
 
 	protected virtual void OnTriggerEnter2D(Collider2D collider)

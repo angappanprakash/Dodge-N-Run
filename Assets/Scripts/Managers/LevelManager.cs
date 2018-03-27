@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 public class LevelManagerDelegates
 {
 	public delegate void OnScoreUpdate();
+	public delegate void OnGameStarted();
 }
 
 public enum GameState
@@ -21,15 +22,19 @@ public class LevelManager : MonoBehaviour
 {
 #region Variables
 	public static event LevelManagerDelegates.OnScoreUpdate	_onScoreUpdate;
+	public static event LevelManagerDelegates.OnScoreUpdate	_onGameStarted;
 
 	[SerializeField]
 	private GameObject				mPauseMenu;
 	[SerializeField]
+	private GameObject				mFadeOutUI;
+	[SerializeField]
+	private GameObject				mTapToStartUI;
+
+	[SerializeField]
 	private List<PlayerController> 	mPlayersList;
 	private GameState				mCurrentGameState;
 	private int						mGameTimer;
-	private int						mScore;
-	private int						mHighScore;
 	private static LevelManager 	mInstance;
 #endregion
 
@@ -53,32 +58,19 @@ public class LevelManager : MonoBehaviour
 	{
 		get { return mGameTimer; }
 	}
-
-	public int pScore
-	{
-		get { return mScore; }
-	}
-
-	public int pHighScore
-	{
-		get { return mHighScore; }
-	}
-
 #endregion
 
 	#region Monobehaviour functions
 	private void Awake()
 	{
-		mScore = 0;
-		mHighScore = 0;
-
-		mHighScore = PlayerData.pInstance.pHighScore;
 		mInstance = this;
 	}
 
 	private void Start()
 	{
 		ShowPauseMenu(false);
+		mFadeOutUI.gameObject.SetActive(false);
+		mTapToStartUI.gameObject.SetActive(true);
 	}
 
 	private void OnDestroy()
@@ -92,6 +84,9 @@ public class LevelManager : MonoBehaviour
 	{
 		Time.timeScale = 1;
 		mCurrentGameState = GameState.IN_PROGRESS;
+		if(_onGameStarted != null)
+			_onGameStarted();
+		mTapToStartUI.gameObject.SetActive(false);
 		InvokeRepeating ("Countdown", 1.0f, 1.0f);
 	}
 
@@ -101,7 +96,16 @@ public class LevelManager : MonoBehaviour
 		if(_onScoreUpdate != null)
 			_onScoreUpdate();
 
-		PlayerData.pInstance.UpdateHighScore(mScore);
+		mFadeOutUI.gameObject.SetActive(true);
+		PlayerData.pInstance.UpdateHighScore(mGameTimer);
+		StartCoroutine("GameOverAfterDelay");
+	}
+
+
+	IEnumerator GameOverAfterDelay()
+	{
+		yield return new WaitForSeconds(2.0f);
+
 		SceneManager.LoadScene("ResultScreen");
 	}
 
@@ -133,8 +137,7 @@ public class LevelManager : MonoBehaviour
 			_onScoreUpdate();
 
 		mGameTimer += 1;
-		mScore = mGameTimer;
-		PlayerData.pInstance.pScore = mScore;
+		PlayerData.pInstance.pScore = mGameTimer;
 		if (pCurrentGameState == GameState.ENDED)
 			CancelInvoke ("Countdown");
 	}

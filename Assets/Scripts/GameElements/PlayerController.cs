@@ -18,15 +18,17 @@ public class PlayerController : MonoBehaviour
 #region Variables
 	private const float JUMP_FORCE_MULITPLIER = 50.0f;
 	[SerializeField]
-	private float 		mJumpForce = 0;
+	private float 		mJumpForce;
+	[SerializeField]
+	private AudioClip	mDeathSFX;
 
 	private PlayerState mCurrentState;
 	private PlayerState mPrevState;
 	private Rigidbody2D	mRigidBody;
 	private PlayerData 	mPlayerData;
 	private Animator	mAnimator;
-	private float 		mStateTimer = 0;
-	private bool		mIsGrounded = true;
+	private float 		mStateTimer;
+	private bool		mIsGrounded;
 	private bool 		mIsGameStarted;
 	private int			mScore;
 #endregion
@@ -56,10 +58,6 @@ public class PlayerController : MonoBehaviour
 
 	private void Start()
 	{
-		mIsGrounded = false;
-		mCurrentState = PlayerState.SPAWN;
-		mPrevState = PlayerState.NONE;
-		mIsGameStarted = false;
 		mAnimator = GetComponentInChildren<Animator>();
 		if(mAnimator == null)
 			Debug.LogError("Cannot find Animator component");
@@ -68,8 +66,10 @@ public class PlayerController : MonoBehaviour
 
 	private void OnEnable()
 	{
+		mIsGrounded = false;
 		mCurrentState = PlayerState.SPAWN;
 		mPrevState = PlayerState.NONE;
+		mIsGameStarted = false;
 	}
 
 	private void OnDisable()
@@ -131,13 +131,14 @@ public class PlayerController : MonoBehaviour
 			}
 		}
 
-		if(Input.GetKeyDown(KeyCode.E))
-			LevelManager.Instance.EndGame();
-		
-		if(Input.GetKeyDown(KeyCode.C))
-		{
-			PlayerPrefs.DeleteAll();
-		}
+		//TEMP HACK:
+//		if(Input.GetKeyDown(KeyCode.E))
+//			LevelManager.Instance.EndGame();
+//		
+//		if(Input.GetKeyDown(KeyCode.C))
+//		{
+//			PlayerPrefs.DeleteAll();
+//		}
 
 		ProcessState();
 	}
@@ -165,6 +166,8 @@ public class PlayerController : MonoBehaviour
 			mRigidBody.velocity = Vector3.zero;
 			mAnimator.SetBool("Run", false);
 			mAnimator.SetTrigger("Fall");
+			AudioManager.pInstance.PlaySound(mDeathSFX);
+			LevelManager.Instance.EndGame();
 			break;
 		default:
 			break;

@@ -5,19 +5,33 @@ using UnityEngine;
 public class ScrollBackground : MonoBehaviour
 {
 #region Variables
-	private Rigidbody2D mRigidbody2D;
 	[SerializeField]
-	private float		mScrollSpeed = -1.5f;
+	private float		mScrollSpeed;
+
+	private Rigidbody2D mRigidbody2D;
 #endregion
 
 #region Monobehaviour functions
+	private void OnEnable()
+	{
+		LevelManager._onGameStarted += LevelManager__onGameStarted;
+	}
+
+	private void OnDisable()
+	{
+		LevelManager._onGameStarted -= LevelManager__onGameStarted;
+	}
+
+	void LevelManager__onGameStarted ()
+	{
+		mRigidbody2D.velocity = new Vector2(mScrollSpeed, 0.0f);
+	}
+
 	void Start () 
 	{
 		mRigidbody2D = GetComponent<Rigidbody2D>();
-		mRigidbody2D.velocity = new Vector2(mScrollSpeed, 0.0f);
 	}
-	
-	// Update is called once per frame
+
 	void Update () 
 	{
 		if(LevelManager.Instance.pCurrentGameState == GameState.ENDED)

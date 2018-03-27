@@ -12,13 +12,13 @@ public class RepeatBackground : MonoBehaviour
 #region Monobehaviour functions
 	private void Start () 
 	{
-		mCollider =GetComponent<BoxCollider2D>();
+		mCollider = GetComponent<BoxCollider2D>();
 		mHorizontalLength = mCollider.size.x;
 	}
 
 	private void Update () 
 	{
-		if(transform.position.x < - mHorizontalLength)
+		if(LevelManager.Instance.pCurrentGameState != GameState.ENDED && transform.position.x < - mHorizontalLength)
 			Reposition();
 	}
 #endregion

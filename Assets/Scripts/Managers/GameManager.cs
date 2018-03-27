@@ -3,14 +3,6 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Advertisements;
 using System.Collections;
 
-//public enum GameState
-//{
-//	MENU,
-//	PLAYING,
-//	PAUSED,
-//	GAME_OVER,
-//	NONE = -1
-//}
 
 public class GameManager : MonoBehaviour
 {
