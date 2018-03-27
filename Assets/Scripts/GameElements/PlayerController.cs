@@ -28,6 +28,7 @@ public class PlayerController : MonoBehaviour
 	private float 		mStateTimer = 0;
 	private bool		mIsGrounded = true;
 	private bool 		mIsGameStarted;
+	private int			mScore;
 #endregion
 
 #region Properties
@@ -128,6 +129,8 @@ public class PlayerController : MonoBehaviour
 					SetState(PlayerState.RUNNING);
 				}
 			}
+			else if(Input.GetKeyDown(KeyCode.E))
+				LevelManager.Instance.EndGame();
 		}
 
 		ProcessState();

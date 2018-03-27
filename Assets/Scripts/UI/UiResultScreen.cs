@@ -1,17 +1,55 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
-public class UiResultScreen : MonoBehaviour 
+public class UiResultScreen: MonoBehaviour 
 {
+	#region Variables
+	[SerializeField]
+	private Text                	m_TxtHighScore;
+	[SerializeField]
+	private Text                	m_TxtScore;
 
-	// Use this for initialization
-	void Start () {
-		
+	[SerializeField]
+	private Button                	m_BtnRestart;
+	[SerializeField]
+	private Button                	m_BtnMainMenu;
+	#endregion
+
+	#region Properties
+	#endregion
+
+	#region Monobehaviour functions
+	private void OnEnable()
+	{
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+
+	private void OnDisable()
+	{
 	}
+
+	private void Start()
+	{
+		m_TxtHighScore.text = PlayerData.pInstance.pHighScore.ToString();
+	}
+
+	private void Update()
+	{
+	}
+	#endregion
+
+	#region Class specific functions
+	public void OnClickRestart()
+	{
+		SceneManager.LoadScene("Game");
+	}
+
+	public void OnClickMainMenu()
+	{
+		SceneManager.LoadScene("MainMenu");
+	}
+	#endregion
 }

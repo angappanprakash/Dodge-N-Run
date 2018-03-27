@@ -9,12 +9,16 @@ public class PlayerData
 	private float               mSFXVolume;
 	private float               mMusicVolume;
 	private bool                mFirstTimeLaunch;
+	private int					mHighScore;
+	private int 				mScore;
 
 	private const float         DEFAULT_SFX_VOLUME = 1.0f;
 	private const float         DEFAULT_MUSIC_VOLUME = 1.0f;
+	private const int         	DEFAULT_HIGH_SCORE = 0;
 
 	private const string        SFX_VOLUME_KEY = "SFXVolume";
 	private const string        MUSIC_VOLUME_KEY = "MusicVolume";
+	private const string 		HIGH_SCORE_KEY = "HighScore";
 
 	private static PlayerData   mInstance;
 #endregion
@@ -28,6 +32,17 @@ public class PlayerData
 	public float pMusicVolume
 	{
 		get { return mMusicVolume;  }
+	}
+
+	public int pHighScore
+	{
+		get {   return mHighScore;  }
+	}
+
+	public int pScore
+	{
+		get {   return mScore;  }
+		set {	mScore = value;	}
 	}
 
 	public static PlayerData pInstance
@@ -61,6 +76,16 @@ public class PlayerData
 		{
 			UpdateMusicVolume(DEFAULT_MUSIC_VOLUME);
 		}
+
+		if (PlayerPrefs.HasKey(HIGH_SCORE_KEY))
+		{
+			mHighScore = PlayerPrefs.GetInt(HIGH_SCORE_KEY);
+		}
+		else
+		{
+			UpdateHighScore(DEFAULT_HIGH_SCORE);
+		}
+		mScore = 0;
 	}
 
 	public void UpdateSFXVolume(float sfxVolume)
@@ -79,6 +104,18 @@ public class PlayerData
 //			AudioManager.pInstance.UpdateMusicVolume(mMusicVolume);
 		PlayerPrefs.SetFloat(MUSIC_VOLUME_KEY, mMusicVolume);
 		PlayerPrefs.Save();
+	}
+
+	public void UpdateHighScore(int score)
+	{
+		mScore = score;
+		if(mScore > PlayerPrefs.GetInt(HIGH_SCORE_KEY))
+		{
+			mHighScore = mScore;
+			PlayerPrefs.SetInt(HIGH_SCORE_KEY, mHighScore);
+			PlayerPrefs.Save();
+		}
+
 	}
 #endregion
 }

@@ -4,6 +4,11 @@ using UnityEngine;
 using System.Linq;
 using UnityEngine.SceneManagement;
 
+public class LevelManagerDelegates
+{
+	public delegate void OnScoreUpdate();
+}
+
 public enum GameState
 {
 	MENU,
@@ -15,48 +20,70 @@ public enum GameState
 public class LevelManager : MonoBehaviour
 {
 #region Variables
+	public static event LevelManagerDelegates.OnScoreUpdate	_onScoreUpdate;
+
 	[SerializeField]
-	private GameObject				m_PauseMenu;
+	private GameObject				mPauseMenu;
 	[SerializeField]
-	private List<PlayerController> 	m_PlayersList;
-	private GameState				m_CurrentGameState;
-	private float					m_GameTimer;
-	private static LevelManager 	m_Instance;
+	private List<PlayerController> 	mPlayersList;
+	private GameState				mCurrentGameState;
+	private int						mGameTimer;
+	private int						mScore;
+	private int						mHighScore;
+	private static LevelManager 	mInstance;
 #endregion
 
 	#region Properties
 	public static LevelManager Instance
 	{
-		get { return m_Instance; }
+		get { return mInstance; }
 	}
 
 	public List<PlayerController> pPlayersList
 	{
-		get { return m_PlayersList; }
+		get { return mPlayersList; }
 	}
 
 	public GameState pCurrentGameState
 	{
-		get { return m_CurrentGameState; }
+		get { return mCurrentGameState; }
 	}
+
+	public int pGameTimer
+	{
+		get { return mGameTimer; }
+	}
+
+	public int pScore
+	{
+		get { return mScore; }
+	}
+
+	public int pHighScore
+	{
+		get { return mHighScore; }
+	}
+
 #endregion
 
 	#region Monobehaviour functions
 	private void Awake()
 	{
-		m_Instance = this;
-		StartGame();
+		mScore = 0;
+		mHighScore = 0;
+
+		mHighScore = PlayerData.pInstance.pHighScore;
+		mInstance = this;
 	}
 
 	private void Start()
 	{
 		ShowPauseMenu(false);
-		InvokeRepeating ("Countdown", 1.0f, 1.0f);
 	}
 
 	private void OnDestroy()
 	{
-		m_Instance = null;
+		mInstance = null;
 	}
 	#endregion
 
@@ -64,15 +91,17 @@ public class LevelManager : MonoBehaviour
 	public void StartGame()
 	{
 		Time.timeScale = 1;
-		m_CurrentGameState = GameState.IN_PROGRESS;
-
-		GameManager.pInstance.pGameEventSystem.TriggerEvent(GameEventsList.PlayerEvents.GAME_START, new GameStartEventArgs());
+		mCurrentGameState = GameState.IN_PROGRESS;
+		InvokeRepeating ("Countdown", 1.0f, 1.0f);
 	}
 
 	public void EndGame()
 	{
-		m_CurrentGameState = GameState.ENDED;
-		GameManager.pInstance.pGameEventSystem.TriggerEvent(GameEventsList.PlayerEvents.GAME_END, new GameEndEventArgs());
+		mCurrentGameState = GameState.ENDED;
+		if(_onScoreUpdate != null)
+			_onScoreUpdate();
+
+		PlayerData.pInstance.UpdateHighScore(mScore);
 		SceneManager.LoadScene("ResultScreen");
 	}
 
@@ -82,7 +111,7 @@ public class LevelManager : MonoBehaviour
 			Time.timeScale = 0;
 		else
 			Time.timeScale = 1;
-		m_PauseMenu.gameObject.SetActive(flag);
+		mPauseMenu.gameObject.SetActive(flag);
 	}
 
 	public void LoadMainMenu()
@@ -91,10 +120,21 @@ public class LevelManager : MonoBehaviour
 		SceneManager.LoadScene("MainMenu");
 	}
 
+	public void LoadGame()
+	{
+		Time.timeScale = 1;
+		SceneManager.LoadScene("Game");
+	}
+
 	private void Countdown () 
 	{
-		Debug.Log("score:" + m_GameTimer);
-		m_GameTimer += 1;
+		//Debug.Log("score:" + mGameTimer);
+		if(_onScoreUpdate != null)
+			_onScoreUpdate();
+
+		mGameTimer += 1;
+		mScore = mGameTimer;
+		PlayerData.pInstance.pScore = mScore;
 		if (pCurrentGameState == GameState.ENDED)
 			CancelInvoke ("Countdown");
 	}

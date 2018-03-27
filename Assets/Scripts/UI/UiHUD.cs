@@ -17,12 +17,17 @@ public class UiHUD : MonoBehaviour
 
 	void OnEnable()
 	{
-		GameManager.pInstance.pGameEventSystem.SubscribeEvent(GameEventsList.PlayerEvents.SCORE_UPDATE, OnScoreUpdate);
+		LevelManager._onScoreUpdate += LevelManager__onScoreUpdate;
+	}
+
+	void LevelManager__onScoreUpdate ()
+	{
+		m_TxtScore.text = LevelManager.Instance.pGameTimer.ToString();
 	}
 
 	void OnDisable()
 	{
-		GameManager.pInstance.pGameEventSystem.UnsubscribeEvent(GameEventsList.PlayerEvents.SCORE_UPDATE, OnScoreUpdate);
+		LevelManager._onScoreUpdate -= LevelManager__onScoreUpdate;
 	}
 
 	private void OnScoreUpdate(PlayerEventParams eventArgs)

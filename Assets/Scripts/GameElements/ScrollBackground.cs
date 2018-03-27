@@ -15,13 +15,14 @@ public class ScrollBackground : MonoBehaviour
 	{
 		mRigidbody2D = GetComponent<Rigidbody2D>();
 		mRigidbody2D.velocity = new Vector2(mScrollSpeed, 0.0f);
+
 	}
 	
 	// Update is called once per frame
 	void Update () 
 	{
-//		if(GameManager.pInstance.pGameState != GameState.PLAYING)
-//			mRigidbody2D.velocity = Vector2.zero;
+		if(LevelManager.Instance.pCurrentGameState == GameState.ENDED)
+			mRigidbody2D.velocity = Vector2.zero;
 	}
 #endregion
 }
