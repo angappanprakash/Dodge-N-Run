@@ -1,16 +1,31 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
-public class UiPauseMenu : MonoBehaviour {
+public class UiPauseMenu: MonoBehaviour 
+{
+	#region Variable
+	[SerializeField]
+	private Button                	m_BtnResume;
+	[SerializeField]
+	private Button                	m_BtnMainMenu;
+	#endregion
 
-	// Use this for initialization
-	void Start () {
-		
+	#region Properties
+	#endregion
+
+	#region Class specific functions
+	public void OnClickResume()
+	{
+		LevelManager.Instance.ShowPauseMenu(false);
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+
+	public void OnClickMainMenu()
+	{
+		LevelManager.Instance.LoadMainMenu();
 	}
+	#endregion
 }

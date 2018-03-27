@@ -20,8 +20,8 @@ public class ScrollBackground : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-		//stop when game over
-		//mRigidbody2D.velocity = Vector2.zero;
+//		if(GameManager.pInstance.pGameState != GameState.PLAYING)
+//			mRigidbody2D.velocity = Vector2.zero;
 	}
 #endregion
 }

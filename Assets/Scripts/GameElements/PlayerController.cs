@@ -124,6 +124,7 @@ public class PlayerController : MonoBehaviour
 				else
 				{
 					mIsGameStarted = true;
+					LevelManager.Instance.StartGame();
 					SetState(PlayerState.RUNNING);
 				}
 			}

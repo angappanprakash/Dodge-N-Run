@@ -16,7 +16,6 @@ public class PlayerData
 	private const string        SFX_VOLUME_KEY = "SFXVolume";
 	private const string        MUSIC_VOLUME_KEY = "MusicVolume";
 
-	private const string        FIRST_TIME_LAUNCH = "FirstTimeLauched";
 	private static PlayerData   mInstance;
 #endregion
 
@@ -29,10 +28,6 @@ public class PlayerData
 	public float pMusicVolume
 	{
 		get { return mMusicVolume;  }
-	}
-	public bool pFirstTimeLaunch
-	{
-		get { return mFirstTimeLaunch; }
 	}
 
 	public static PlayerData pInstance
@@ -66,15 +61,6 @@ public class PlayerData
 		{
 			UpdateMusicVolume(DEFAULT_MUSIC_VOLUME);
 		}
-
-		if (PlayerPrefs.HasKey(FIRST_TIME_LAUNCH))
-		{
-			mFirstTimeLaunch = (PlayerPrefs.GetInt(FIRST_TIME_LAUNCH) == 1) ? true : false ;
-		}
-		else
-		{
-			SetFirstTimeLauched(false);
-		}
 	}
 
 	public void UpdateSFXVolume(float sfxVolume)
@@ -92,13 +78,6 @@ public class PlayerData
 //		if(AudioManager.pInstance)
 //			AudioManager.pInstance.UpdateMusicVolume(mMusicVolume);
 		PlayerPrefs.SetFloat(MUSIC_VOLUME_KEY, mMusicVolume);
-		PlayerPrefs.Save();
-	}
-
-	public void SetFirstTimeLauched(bool isFirstTimeLaunched)
-	{
-		mFirstTimeLaunch = isFirstTimeLaunched;
-		PlayerPrefs.SetInt(FIRST_TIME_LAUNCH, mFirstTimeLaunch? 1 : 0);
 		PlayerPrefs.Save();
 	}
 #endregion
