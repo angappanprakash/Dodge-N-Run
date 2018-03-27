@@ -12,7 +12,6 @@ Sprite Animation: Still need to be polished
 
 Place holders: Entire Art required for the game.
 
-Things need to be done:
 Code Design:
     Its a mixture of data driven and state base and extendable classes.
     Singleton classes - All manager class, such as game manager, Level manager, Audio manager and etc.
