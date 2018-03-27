@@ -129,8 +129,14 @@ public class PlayerController : MonoBehaviour
 					SetState(PlayerState.RUNNING);
 				}
 			}
-			else if(Input.GetKeyDown(KeyCode.E))
-				LevelManager.Instance.EndGame();
+		}
+
+		if(Input.GetKeyDown(KeyCode.E))
+			LevelManager.Instance.EndGame();
+		
+		if(Input.GetKeyDown(KeyCode.C))
+		{
+			PlayerPrefs.DeleteAll();
 		}
 
 		ProcessState();

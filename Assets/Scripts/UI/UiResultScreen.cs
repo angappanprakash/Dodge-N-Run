@@ -34,6 +34,7 @@ public class UiResultScreen: MonoBehaviour
 	private void Start()
 	{
 		m_TxtHighScore.text = PlayerData.pInstance.pHighScore.ToString();
+		m_TxtScore.text = PlayerData.pInstance.pScore.ToString();
 	}
 
 	private void Update()
